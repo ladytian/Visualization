@@ -12,6 +12,7 @@ for filename in files:
 	d2 = pd.read_csv(path + "\\" + filename, skiprows=7)
 	d = pd.concat([d1,d2], ignore_index=True)
 	d1 = d
-	print 1
-print d.info()
+	#print 1
+#print d.info()
+d = d.sort(columns='Client MAC Address', ascending=True)
 d.to_csv(r"D:\workspace\Visualization\Teachers_roaming\20170414.csv", index=False)
