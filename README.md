@@ -18,6 +18,16 @@ First:
 
 Second(Execution sequence):
 
+	selection 1:
+
+	merge.py: Synthesize several .csv to a file.
+		  Sorting. This is the most important step. Otherwise, the "data.py" can't success.
+
+	data.py: Generate target file.
+
+
+	selection 2:
+
 	data1.py: Drop redundant columns and rename.
 			  Convert "sessionDuration" in "a.csv" to seconds.
 			  Deal with the values containing ",".
@@ -29,5 +39,7 @@ Second(Execution sequence):
 
 	data3.py: Calculation "breakingTime" using "data2.csv".
 			  Set the column order as ['clientMacAdd','associationTime','sessionDuration','breakingTime','building','room','avgThroughput','byteSent','byteReceived','RSSI','vendor','vlanID','protocol']
+			 
+	data4.py: Adjustment format and generate target file.
 
 	Must follow the order above.
