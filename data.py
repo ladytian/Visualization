@@ -42,6 +42,7 @@ def main():
 			reader = csv.reader(open(root + '/' + filename))
 
 			output = open('D:/workspace/Visualization/complete data/' + filename[0:-4] + '.json', 'a')
+			output.write('[')
 
 			data_dict = {}
 			clientname =""
@@ -77,10 +78,9 @@ def main():
 					data_dict['RSSI'] = list_rssi
 
 					if data_dict['clientMacAdd'] != '':
-						for i in range(200000):
-							print i
+						print 1
 						json.dump(data_dict, output)
-						#output.write('\n')
+						output.write(',')
 
 					#personinfo.append(data_dict)
 
@@ -139,6 +139,7 @@ def main():
 			#	for info in personinfo:
 			#		json.dump(info, output)
 			#		output.write('\n')
+			output.write(']')
 			output.close()
 
 			'''
