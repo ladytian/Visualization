@@ -60,7 +60,7 @@ def main():
 			#reader = csv.reader(open(r"D:\workspace\Visualization\Teachers_roaming_day_0307_0414\20170407.csv"))
 			reader.next()
 			for Client_Username,ClientIPAddress,clientMacAdd,associationTime,vendor,AP_Name,Device_Name,SSID,Profile,vlanID,protocol,sessionDuration,avgThroughput,byteSent,byteReceived,Mobility_Status,RSSI,APIPAddress in reader:
-						
+				#,ClientType		
 				#data_dict = {}
 
 				if len(AP_Name) < 1:
@@ -132,6 +132,8 @@ def main():
 						list_avg.append(float(_throughput))
 					except Exception, e:
 						list_avg.append(float(0.1))
+						
+				data_dict['count'] = len(list_b)
 
 			#print personinfo
 
