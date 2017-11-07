@@ -20,5 +20,6 @@ for filename in files[1: ]:
 	d1 = d
 	print 1
 #print d.info()
-d = d.sort(columns='Client MAC Address', ascending=True)
+#d = d.sort(columns='Client MAC Address', ascending=True)
+d = d.sort_values(by=['Client MAC Address', 'Association Time'], ascending=True)
 d.to_csv(r"D:\workspace\Visualization\csv_data\20171019.csv", index=False)
