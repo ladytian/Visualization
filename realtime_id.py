@@ -4,6 +4,7 @@ import base64
 import ssl
 from xml.etree import ElementTree as ET
 import pandas as pd
+from datetime import datetime
 
 
 #to get the XML files when given a url and return the string of the files content.
@@ -143,7 +144,8 @@ if __name__ == '__main__':
         while(count <= 5):
             
             print count
-            print theurl + param
+            #print theurl + param
+            #print datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
             url_list = read_xml(get_xml(theurl + param), "entityId", "url")
             #print len(url_list)
