@@ -32,3 +32,15 @@ Second(Execution sequence):
 	data.py: Generate target .json files.
 
 	Must follow the order above.
+	
+Realtime:
+
+	realtime_sort_filter.py: to get the data after filtered by 'ASSOCIATED' and sorted by '+associationTime'. 100 pieces/every time.
+
+	realtime_id.py: to get the data according to the id so we can get all data for one day.
+
+	realtime_to_json.py: csv to json.
+
+	5csv_realtime: to save the real-time data by .csv.
+
+	5json_realtime: to save the real-time data by .json.
