@@ -51,12 +51,12 @@ def read_data(lt):
     #lt_bytessent = []
     #lt_rssi = []
    
-    #for j in range(0,3):
+    #for j in range(0,10):
     for j in range(len(lt)):
         
         page = get_xml(lt[j])
         #print thepage
-        print j, lt[j]
+        #print j, lt[j]
 
         root = ET.fromstring(page)
         #print j, root.tag, root.text
@@ -84,7 +84,7 @@ def read_data(lt):
     #print [lt_clientmac, lt_assotime, lt_apname, lt_throughput, lt_rssi]
     #return [lt_clientmac, lt_assotime, lt_apname, lt_throughput, lt_rssi]
     #print [lt_clientmac, lt_assotime, lt_apname]
-    print last_id
+    #print type(lt_assotime[-1]), lt_assotime[-1]
     return [lt_clientmac, lt_assotime, lt_apname], last_id
 
 
@@ -96,6 +96,8 @@ def get_csv(lt):
         
         #df = pd.DataFrame({'clientMacAdd':lt[0], 'associationTime':lt[1], 'AP_Name':lt[2], 'throughput':lt[3], 'rssi':lt[4]}) # for v1
         df = pd.DataFrame({'clientMacAdd':lt[0], 'associationTime':lt[1], 'AP_Name':lt[2]}) # for v2
+        
+        df.sort_values(by=['associationTime'], ascending=True)
 
         df.to_csv(r".\5csv_realtime" + "\\" + str(k) + "v2_id_test.csv",index=False,sep=',', mode='w')
         #df.to_csv(r".\5csv_realtime" + "\\" + "test6.csv",index=False,sep=',', mode='a')
@@ -127,7 +129,7 @@ if __name__ == '__main__':
     
     k = 0
 
-    while(k <= 2):
+    while(k <= 1): # counts = k * counts, n_files = k
         
         print k
         k = k+1
@@ -135,17 +137,17 @@ if __name__ == '__main__':
         count = 0
         read_last_id = ""
         param = '?id=gt(0)'
+        data_list = []
 
-        lt_id = []
         lt_clientmac = []
         lt_assotime = []
         lt_apname = []
         
-        while(count <= 5):
+        while(count <= 0): # counts = count*100
             
             print count
             #print theurl + param
-            #print datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            print datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
             url_list = read_xml(get_xml(theurl + param), "entityId", "url")
             #print len(url_list)
