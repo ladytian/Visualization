@@ -136,7 +136,7 @@ if __name__ == '__main__':
         
         count = 0
         read_last_id = ""
-        param = '?id=gt(0)'
+        param = '?id=gt(0)&status="ASSOCIATED"'
         data_list = []
 
         lt_clientmac = []
@@ -154,7 +154,7 @@ if __name__ == '__main__':
 
             data_list, read_last_id = read_data(url_list)
 
-            param = '?id=gt(' + read_last_id + ')'  
+            param = '?id=gt(' + read_last_id + ')&status="ASSOCIATED"'
             count = count + 1
             
         get_csv(data_list)
