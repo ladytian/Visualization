@@ -5,7 +5,7 @@ import ssl
 from xml.etree import ElementTree as ET
 import pandas as pd
 from datetime import datetime
-import time
+#import time
 import argparse
 
 #to get the XML files when given a url and return the string of the files content.
@@ -46,9 +46,9 @@ def read_data(lt):
     
     dirs = 'entity/clientDetailsDTO/'
     #fields = ['macAddress', 'associationTime', 'apName', 'throughput', 'rssi'] # for v1
-    fields = ['macAddress', 'associationTime', 'apName'] # for v2
+    fields = ['macAddress', 'associationTime', 'apName', 'status'] # for v2
    
-    #for j in range(0,3):
+    #for j in range(0,10):
     for j in range(len(lt)): 
         try:
             page = get_xml(lt[j])
@@ -66,6 +66,8 @@ def read_data(lt):
                         lt_assotime.append(item.text)
                     elif i == 2:
                         lt_apname.append(item.text)
+                    elif i == 3:
+                        lt_status.append(item.text)
                     #elif i == 3:
                     #    lt_throughput.append(item.text)
                     #elif i == 4:
@@ -74,94 +76,113 @@ def read_data(lt):
             #raise Exception("Test error!", j)
             
         except Exception:
-            print "Error: Read false!"
+            print "Warning: Read false! An error occurred in the url " + lt[j] 
                     
     last_id = read_xml(page, 'entity/clientDetailsDTO', 'id')[0]
                     
     #print [lt_clientmac, lt_assotime, lt_apname, lt_throughput, lt_rssi]
     #return [lt_clientmac, lt_assotime, lt_apname, lt_throughput, lt_rssi]
     #print [lt_clientmac, lt_assotime, lt_apname]
-    return [lt_clientmac, lt_assotime, lt_apname], last_id
+    return [lt_clientmac, lt_assotime, lt_apname, lt_status], last_id
 
 
 # to store the data in the CSV file according to the field given the tuple of data lists.
 def get_csv(lt):
-    
+
     #if len(lt[0]) == len(lt[1]) == len(lt[2]) == len(lt[3]) == len(lt[4]):
-    if len(lt[0]) == len(lt[1]) == len(lt[2]):
+    if len(lt[0]) == len(lt[1]) == len(lt[2]) == len(lt[3]):
         
         #df = pd.DataFrame({'clientMacAdd':lt[0], 'associationTime':lt[1], 'AP_Name':lt[2], 'throughput':lt[3], 'rssi':lt[4]}) # for v1
-        df = pd.DataFrame({'clientMacAdd':lt[0], 'associationTime':lt[1], 'AP_Name':lt[2]}) # for v2
+        df = pd.DataFrame({'clientMacAdd':lt[0], 'associationTime':lt[1], 'AP_Name':lt[2], 'status':lt[3]}) # for v2
         
         #df.sort_values(by=['associationTime'], ascending=True)
 
-        #df.to_csv(r".\5csv_realtime" + "\\" + str(k) + "v2_id_test.csv",index=False,sep=',', mode='w')
-        #df.to_csv(r".\5csv_realtime" + "\\" + "test6.csv",index=False,sep=',', mode='a')
-        #df.to_csv(r".\5csv_realtime" + "\\" + str(time.strftime('%Y%m%d%H%M%S')) + "_test.csv",index=False,sep=',', mode='w')
-        df.to_csv(r"./csv_realtime" + "/" + str(time.strftime('%Y%m%d%H%M%S')) + "_test.csv",index=False,sep=',', mode='w')         
+        #df.to_csv(r".\5csv_realtime" + "\\" + str(datetime.now().strftime('%Y%m%d%H%M%S')) + "_test.csv",index=False,sep=',', mode='w')
+        df.to_csv(r"./csv_realtime" + "/" + str(datetime.now().strftime('%Y%m%d%H%M%S')) + "_test.csv",index=False,sep=',', mode='w')         
         #print df.head(5)
-    
+
     else:
-        print "Lists have different length, False!"
+        print "Warning: Lists have different length!"
     
     #return df
     
 
 def main():
     
-    n_k = 0 if args.n_k == None else args.n_k
-    n_count = 100 if args.n_count == None else args.n_count
-    
-    #v1:slow and v2:fast
-    #theurl = "https://192.168.16.203/webacs/api/v2/data/ClientDetails?status="ASSOCIATED"
-    #theurl = 'https://192.168.16.203/webacs/api/v2/data/ClientDetails?.sort=-associationTime&status="ASSOCIATED"'
-    theurl = 'https://192.168.16.203/webacs/api/v2/data/ClientDetails/'
-    #<queryResponse last="99" first="0" count="33863" 
+    try:
+        n_k = 0 if args.n_k == None else args.n_k
+        n_count = 100 if args.n_count == None else args.n_count
+        maxid = 3002692800 if args.n_count == None else args.maxid
+        
+        #v1:slow and v2:fast
+        #theurl = "https://192.168.16.203/webacs/api/v2/data/ClientDetails?status="ASSOCIATED"
+        #theurl = 'https://192.168.16.203/webacs/api/v2/data/ClientDetails?.sort=-associationTime&status="ASSOCIATED"'
+        theurl = 'https://192.168.16.203/webacs/api/v2/data/ClientDetails/'
+        #<queryResponse last="99" first="0" count="33863" maxid=2993645213 3002692911 minid=3302954
+           
+        #print get_xml(theurl)
+        #read_data(url_list)    
+        #get_csv(read_data(url_list))
        
-    #print get_xml(theurl)
-    #read_data(url_list)    
-    #get_csv(read_data(url_list))
-   
-    k = 0
-    while(True): # counts = k * counts, n_files = k
-        
-        print k
-        
-        count = 0
-        data_list = []
-        read_last_id = ""
-        param = '?id=gt(0)&status="ASSOCIATED"'
-        
-        global lt_clientmac
-        lt_clientmac = []
-        global lt_assotime
-        lt_assotime = []
-        global lt_apname
-        lt_apname = []
-      
-        while(count < n_count): # counts = count*100
+        k = 0
+        while(True): # counts = k * counts, n_files = k
             
-            print count
-            print datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            print "k=%d" % k
+            
+            count = 0
+            data_list = []
+            read_last_id = ""
+            param = '?id=gt(0)'
+            #param = '?id=gt(0)&status="ASSOCIATED"'
+            #param = '?.sort=+id'
+            
+            global lt_clientmac
+            lt_clientmac = []
+            global lt_assotime
+            lt_assotime = []
+            global lt_apname
+            lt_apname = []
+            global lt_status
+            lt_status = []
+          
+            while(count < n_count): # counts = count*100
+                
+                print "count=%d" % count
+                print "read_last_id=" + str(read_last_id)
+                #print theurl + param
+                print datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-            url_list = read_xml(get_xml(theurl + param), "entityId", "url")
-            #print len(url_list)
-            data_list, read_last_id = read_data(url_list)
-            param = '?id=gt(' + read_last_id + ')&status="ASSOCIATED"'  
-            count = count + 1
+                url_list = read_xml(get_xml(theurl + param), "entityId", "url")
+                #print len(url_list), url_list
+                data_list, read_last_id = read_data(url_list)
+
+                if int(read_last_id) >= maxid:
+                    break
+                
+                #param = '?id=gt(' + read_last_id + ')&status="ASSOCIATED"'
+                param = '?id=gt(' + read_last_id + ')'  
+                count = count + 1
+                
+            get_csv(data_list)
             
-        get_csv(data_list)
-        
-        k = k+1
-        if k == n_k:
-            break
-        
+            k = k+1
+            if k == n_k:
+                break
+
+            #raise Exception()
+
+    except Exception:
+        print "Warning: An error occurred in the k=" + str(k) + " and count=" + str(count) + " and maybe there was an error when writing a csv file!"
+    else:
+        print "Congratulations! Success!"
+
 if __name__ == '__main__':
     
     global args
     lt_clientmac = []
     lt_assotime = []
     lt_apname = []
+    lt_status = []
     #lt_throughput = []
     #lt_bytesreveived = []
     #lt_bytessent = []
@@ -170,6 +191,7 @@ if __name__ == '__main__':
     argsparser =  argparse.ArgumentParser()
     argsparser.add_argument("-n_count",type=int,default=100)
     argsparser.add_argument("-n_k",type=int,default=0)
+    argsparser.add_argument("-maxid",type=int,default=3002692800)
     args = argsparser.parse_args()
 
     main()
