@@ -45,7 +45,6 @@ def read_xml(text, tag, attribute):
 def read_data(lt):
     
     dirs = 'entity/clientDetailsDTO/'
-    #fields = ['macAddress', 'associationTime', 'apName', 'throughput', 'rssi'] # for v1
     fields = ['macAddress', 'associationTime', 'apName', 'status'] # for v2
    
     #for j in range(0,10):
@@ -68,40 +67,42 @@ def read_data(lt):
                         lt_apname.append(item.text)
                     elif i == 3:
                         lt_status.append(item.text)
-                    #elif i == 3:
-                    #    lt_throughput.append(item.text)
-                    #elif i == 4:
-                    #    lt_rssi.append(item.text)
-                    
+
+
+            if lt_clientmac[-1] == "" or lt_assotime[-1] == "" or lt_apname[-1] == "" or lt_status[-1]== "":
+                print "Warning: None value! The error url is " + lt[j] + " The data I have got is [" + lt_clientmac[-1] + "," +lt_assotime[-1] + "," + lt_apname[-1] + "," + lt_status[-1] + "]" 
+                lt_clientmac.pop(-1)
+                lt_assotime.pop(-1)
+                lt_apname.pop(-1)
+                lt_status.pop(-1)
+
             #raise Exception("Test error!", j)
             
         except Exception:
             print "Warning: Read false! An error occurred in the url " + lt[j] 
                     
     last_id = read_xml(page, 'entity/clientDetailsDTO', 'id')[0]
-                    
-    #print [lt_clientmac, lt_assotime, lt_apname, lt_throughput, lt_rssi]
-    #return [lt_clientmac, lt_assotime, lt_apname, lt_throughput, lt_rssi]
-    #print [lt_clientmac, lt_assotime, lt_apname]
+
+    #print [lt_clientmac, lt_assotime, lt_apname, lt_status]
     return [lt_clientmac, lt_assotime, lt_apname, lt_status], last_id
 
 
 # to store the data in the CSV file according to the field given the tuple of data lists.
 def get_csv(lt):
 
-    #if len(lt[0]) == len(lt[1]) == len(lt[2]) == len(lt[3]) == len(lt[4]):
     if len(lt[0]) == len(lt[1]) == len(lt[2]) == len(lt[3]):
         
-        #df = pd.DataFrame({'clientMacAdd':lt[0], 'associationTime':lt[1], 'AP_Name':lt[2], 'throughput':lt[3], 'rssi':lt[4]}) # for v1
         df = pd.DataFrame({'clientMacAdd':lt[0], 'associationTime':lt[1], 'AP_Name':lt[2], 'status':lt[3]}) # for v2
         
         #df.sort_values(by=['associationTime'], ascending=True)
 
-        #df.to_csv(r".\5csv_realtime" + "\\" + str(datetime.now().strftime('%Y%m%d%H%M%S')) + "_test.csv",index=False,sep=',', mode='w')
-        df.to_csv(r"./csv_realtime" + "/" + str(datetime.now().strftime('%Y%m%d%H%M%S')) + "_test.csv",index=False,sep=',', mode='w')         
+        #df.to_csv(r".\5csv_realtime" + "\\" + str(datetime.now().strftime('%Y%m%d%H%M%S')) + ".csv",index=False,sep=',', mode='w')
+        #df. to_csv(r"./csv_realtime" + "/" + "visualization.csv",index=False,sep=',', mode='w')
+        df.to_csv(r"./csv_realtime" + "/" + str(datetime.now().strftime('%Y%m%d%H%M%S')) + ".csv",index=False,sep=',', mode='w')         
         #print df.head(5)
 
     else:
+        print lt[0], lt[1], lt[2], lt[3]
         print "Warning: Lists have different length!"
     
     #return df
@@ -115,7 +116,6 @@ def main():
         maxid = 3002692800 if args.n_count == None else args.maxid
         
         #v1:slow and v2:fast
-        #theurl = "https://192.168.16.203/webacs/api/v2/data/ClientDetails?status="ASSOCIATED"
         #theurl = 'https://192.168.16.203/webacs/api/v2/data/ClientDetails?.sort=-associationTime&status="ASSOCIATED"'
         theurl = 'https://192.168.16.203/webacs/api/v2/data/ClientDetails/'
         #<queryResponse last="99" first="0" count="33863" maxid=2993645213 3002692911 minid=3302954
@@ -183,10 +183,6 @@ if __name__ == '__main__':
     lt_assotime = []
     lt_apname = []
     lt_status = []
-    #lt_throughput = []
-    #lt_bytesreveived = []
-    #lt_bytessent = []
-    #lt_rssi = []
     
     argsparser =  argparse.ArgumentParser()
     argsparser.add_argument("-n_count",type=int,default=100)
