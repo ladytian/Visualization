@@ -5,7 +5,7 @@ import ssl
 from xml.etree import ElementTree as ET
 import pandas as pd
 from datetime import datetime
-#import time
+import time
 import argparse
 
 #to get the XML files when given a url and return the string of the files content.
@@ -68,19 +68,22 @@ def read_data(lt):
                     elif i == 3:
                         lt_status.append(item.text)
 
+            if not(len(lt_clientmac) == len(lt_assotime) == len(lt_apname) == len(lt_status)):
+                m = min(len(lt_clientmac), len(lt_assotime), len(lt_apname), len(lt_status))
 
-            if lt_clientmac[-1] == "" or lt_assotime[-1] == "" or lt_apname[-1] == "" or lt_status[-1]== "":
-                print "Warning: None value! The error url is " + lt[j] + " The data I have got is [" + lt_clientmac[-1] + "," +lt_assotime[-1] + "," + lt_apname[-1] + "," + lt_status[-1] + "]" 
-                lt_clientmac.pop(-1)
-                lt_assotime.pop(-1)
-                lt_apname.pop(-1)
-                lt_status.pop(-1)
-
+                while(len(lt_clientmac) > m):
+                    lt_clientmac.pop()
+                while(len(lt_assotime) > m):
+                    lt_assotime.pop()
+                while(len(lt_apname) > m):
+                    lt_apname.pop()
+                while(len(lt_status) > m):
+                    lt_status.pop()
             #raise Exception("Test error!", j)
             
         except Exception:
-            print "Warning: Read false! An error occurred in the url " + lt[j] 
-                    
+            print "Warning: Read false! An error occurred in the url " + lt[j]
+
     last_id = read_xml(page, 'entity/clientDetailsDTO', 'id')[0]
 
     #print [lt_clientmac, lt_assotime, lt_apname, lt_status]
@@ -102,7 +105,7 @@ def get_csv(lt):
         #print df.head(5)
 
     else:
-        print lt[0], lt[1], lt[2], lt[3]
+        #print lt[0], lt[1], lt[2], lt[3]
         print "Warning: Lists have different length!"
     
     #return df
@@ -168,6 +171,8 @@ def main():
             k = k+1
             if k == n_k:
                 break
+            if k % 5 == 0:
+                time.sleep(300)
 
             #raise Exception()
 
