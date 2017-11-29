@@ -35,6 +35,13 @@ Second(Execution sequence):
 	
 Realtime:
 
+	realtime_id_v1.py: to get the realtime data according to "id" from the path "https://192.168.16.203/webacs/api/v1/data/ClientDetails/", then the data will be written into the .csv.
+
+	realtime_id_v2.py: to get the realtime data according to "id" from the path "https://192.168.16.203/webacs/api/v2/data/ClientDetails/", then the data will be written into the .csv.
+
+	realtime_id_v2_db.py: to get the realtime data according to "id" from the path "https://192.168.16.203/webacs/api/v2/data/ClientDetails/", then the data will be saved into the MySQL.
+
+
 	realtime_sort_filter.py: to get the data after filtered by 'ASSOCIATED' and sorted by '+associationTime'. 100 pieces/every time.
 
 	realtime_id.py: to get the data according to the id so we can get all data for one day.
