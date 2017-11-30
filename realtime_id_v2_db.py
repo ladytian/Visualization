@@ -119,7 +119,7 @@ def db_create(table_name):
     cursor = db.cursor()
 
     # to set up a table
-    sql = "CREATE TABLE wifi_%s" % table_name + "( \
+    sql = "CREATE TABLE IF NOT EXISTS wifi_%s" % table_name + "( \
     clientMacAdd CHAR(25) NOT NULL, \
     associationTime CHAR(20), \
     AP_Name CHAR(70), status CHAR(25) \
@@ -148,7 +148,7 @@ def db_insert(lt, table_name):
 
     for i in range(len(lt[0])):
 
-        sql = """INSERT INTO wifi_%s""" % table_name + """(clientMacAdd, associationTime, AP_Name, status)VALUES ('%s', '%s', '%s', '%s')""" % (lt[0][i], lt[1][i], lt[2][i], lt[3][i])
+        sql = """INSERT IGNORE INTO wifi_%s""" % table_name + """(clientMacAdd, associationTime, AP_Name, status)VALUES ('%s', '%s', '%s', '%s')""" % (lt[0][i], lt[1][i], lt[2][i], lt[3][i])
 
         try:
             cursor.execute(sql)
