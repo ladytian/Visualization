@@ -120,9 +120,11 @@ def db_create(table_name):
 
     # to set up a table
     sql = "CREATE TABLE IF NOT EXISTS wifi_%s" % table_name + "( \
+    id int not null auto_increment primary key, \
     clientMacAdd CHAR(25) NOT NULL, \
     associationTime CHAR(20), \
-    AP_Name CHAR(70), status CHAR(25) \
+    AP_Name CHAR(70), \
+    status CHAR(25) \
     )"
 
     try:
