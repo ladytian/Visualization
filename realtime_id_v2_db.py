@@ -240,7 +240,7 @@ def main():
             k = k+1
             if k == n_k:
                 break
-            if k % 5 == 0:
+            if k % 2 == 0:
                 time.sleep(300)
 
             #raise Exception()
