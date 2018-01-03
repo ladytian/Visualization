@@ -6,7 +6,9 @@ from xml.etree import ElementTree as ET
 import pandas as pd
 from datetime import datetime
 import time
+import random
 import argparse
+import traceback
 import MySQLdb
 
 #to get the XML files when given a url and return the string of the files content.
@@ -83,6 +85,9 @@ def read_data(lt):
             #raise Exception("Test error!", j)
             
         except Exception:
+            with open('debug.txt','a+') as errorInfo:
+                traceback.print_exc(file=errorInfo)
+            print datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             print "Warning: Read false! An error occurred in the url " + lt[j]
 
     last_id = read_xml(page, 'entity/clientDetailsDTO', 'id')[0]
@@ -206,9 +211,11 @@ def main():
             while(count < n_count): # counts = count*100
                 
                 print "count=%d" % count
-                print "read_last_id=" + str(read_last_id)
+                #print "read_last_id=" + str(read_last_id)
                 #print theurl + param
-                print datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+                if k == 0 & count == 0:
+                    print datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
                 url_list = read_xml(get_xml(theurl + param), "entityId", "url")
                 #print len(url_list), url_list
@@ -230,6 +237,8 @@ def main():
                 else:
                     db_insert(data_list, table_name1)
 
+                time.sleep(3 + random.randint(0, 30))
+
                 lt_clientmac = []
                 lt_assotime = []
                 lt_apname = []
@@ -241,13 +250,19 @@ def main():
             if k == n_k:
                 break
             if k % 2 == 0:
-                time.sleep(300)
+                time.sleep(300 + random.randint(0, 240))
+            else:
+                time.sleep(60 + random.randint(0, 120))
 
             #raise Exception()
 
     except Exception:
-        print "Warning: An error occurred in the k=" + str(k) + " and count=" + str(count) + " and maybe there was an error when writing a csv file!"
+        with open('debug.txt','a+') as errorInfo:
+            traceback.print_exc(file=errorInfo)
+        print datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        print "Warning: An error occurred in the k=" + str(k) + " and count=" + str(count)
     else:
+        print datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         print "Congratulations! Success!"
 
 if __name__ == '__main__':
