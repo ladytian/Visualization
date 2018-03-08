@@ -21,10 +21,15 @@ def get_xml(url):
     base64string = base64.encodestring('%s:%s' % (username, password))[:-1]
     authheader =  "Basic %s" % base64string
     req.add_header("Authorization", authheader)
-
     context = ssl._create_unverified_context()
-    handle = urllib2.urlopen(req, context=context)
-    thepage = handle.read() 
+    
+    try:
+        handle = urllib2.urlopen(req, context=context, timeout=60)
+        thepage = handle.read() 
+    except Exception:
+        with open('debug.txt','a+') as errorInfo:
+            traceback.print_exc(file=errorInfo)
+        print datetime.now().strftime('%Y-%m-%d %H:%M:%S') 
 
     return thepage
 
@@ -218,7 +223,7 @@ def main():
                 else:
                     db_insert(data_list, table_name1)
 
-                time.sleep(3 + random.randint(0, 30))
+                time.sleep(30 + random.randint(0, 30))
 
                 lt_clientmac = []
                 lt_assotime = []
