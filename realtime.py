@@ -13,7 +13,7 @@ import MySQLdb
 
 #to get the XML files when given a url and return the string of the files content.
 def get_xml(url):
-    
+
     req=urllib2.Request(url)
 
     username = 'prog'
@@ -22,16 +22,16 @@ def get_xml(url):
     authheader =  "Basic %s" % base64string
     req.add_header("Authorization", authheader)
     context = ssl._create_unverified_context()
-    
+
     try:
         handle = urllib2.urlopen(req, context=context, timeout=60)
         thepage = handle.read() 
-    except Exception:
+        return thepage
+    except:
         with open('debug.txt','a+') as errorInfo:
             traceback.print_exc(file=errorInfo)
-        print datetime.now().strftime('%Y-%m-%d %H:%M:%S') 
-
-    return thepage
+        print datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        return "error"
 
 # to get a specific property content in a XML file when given the text，label path and attribute name and return a list.
 def read_xml(text, tag, attribute):
@@ -59,6 +59,8 @@ def read_data(lt):
     for j in range(len(lt)): 
         try:
             page = get_xml(lt[j])
+            if page == "error":
+                continue
 
             root = ET.fromstring(page)
 
@@ -184,7 +186,12 @@ def main():
             print datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
             s = 0
-            count = get_count(get_xml(theurl))
+            p = get_xml(theurl)
+
+            if p == "error":
+                continue
+
+            count = get_count(p)
             print count, s
 
             data_list = []
@@ -204,9 +211,13 @@ def main():
 
             while(s < count):
                 
-                url_list = read_xml(get_xml(theurl + param), "entityId", "url")
+                p = get_xml(theurl + param)
 
-                count = get_count(get_xml(theurl))
+                if p == "error":
+                    continue
+
+                url_list = read_xml(p, "entityId", "url")
+                count = get_count(p)
                 s = s + len(url_list)
                 print count, s
                 # len(url_list) = 100
@@ -223,7 +234,7 @@ def main():
                 else:
                     db_insert(data_list, table_name1)
 
-                time.sleep(30 + random.randint(0, 30))
+                time.sleep(random.randint(10, 20))
 
                 lt_clientmac = []
                 lt_assotime = []
@@ -235,9 +246,9 @@ def main():
             if k == n_k:
                 break
             if k % 2 == 0:
-                time.sleep(300 + random.randint(0, 240))
+                time.sleep(random.randint(300, 500))
             else:
-                time.sleep(60 + random.randint(0, 120))
+                time.sleep(random.randint(60, 180))
 
     except Exception:
         with open('debug.txt','a+') as errorInfo:
