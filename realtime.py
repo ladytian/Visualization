@@ -116,7 +116,7 @@ def get_csv(lt):
     
 def db_create(table_name):
     #to open the connection
-    db = MySQLdb.connect(host='59.67.152.230', user='root', passwd='zh911zh911_+!', db='wifi', port=3306)
+    db = MySQLdb.connect(host='59.67.152.230', user='root', passwd='zh911zh911_+!', db='wifi', port=3306, connect_timeout=20)
 
     # to get the cursor with the method cursor()
     cursor = db.cursor()
@@ -146,7 +146,7 @@ def db_create(table_name):
 def db_insert(lt, table_name):
 
     #to open the connection
-    db = MySQLdb.connect(host='59.67.152.230', user='root', passwd='zh911zh911_+!', db='wifi', port=3306)
+    db = MySQLdb.connect(host='59.67.152.230', user='root', passwd='zh911zh911_+!', db='wifi', port=3306, connect_timeout=20)
 
     # to get the cursor with the method cursor()
     cursor = db.cursor()
