@@ -6,7 +6,9 @@ I am responsible for the data processing.
 
 Now, fighting!
 
-First(The introduction of the file and floders):
+Offline data:
+
+    First(The introduction of the file and floders):
 
 	1. "0compus_wireless": The data downloaded from the email.
 
@@ -24,7 +26,7 @@ First(The introduction of the file and floders):
 
 	8. data.py: Generate .json files in folder "json_data" automatically from files in folder "csv_data".
 
-Second(Execution sequence):
+    Second(Execution sequence):
 
 	merge.py: Synthesize several .csv to a file.
 		  Sorting. This is the most important step. Otherwise, the "data.py" can't success.
@@ -33,7 +35,7 @@ Second(Execution sequence):
 
 	Must follow the order above.
 	
-Realtime:
+Realtime data:
 
 	realtime_id_v1_csv.py: to get the realtime data according to "id" from the path "https://192.168.16.203/webacs/api/v1/data/ClientDetails/", then the data will be written into the .csv.
 
